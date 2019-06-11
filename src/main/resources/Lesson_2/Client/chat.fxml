@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+<?scenebuilder-stylesheet styles.css?>
+<?import javafx.scene.control.Label?>
+
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.text.Text?>
+<?import javafx.scene.control.PasswordField?>
+<?import javafx.scene.control.ListView?>
+
+<?import javafx.scene.layout.StackPane?>
+<HBox fx:id="allscene" stylesheets="@styles.css" xmlns="http://javafx.com/javafx/8.0.172-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Lesson_2.Client.ChatController">
+    <StackPane fx:id="body" alignment="BOTTOM_LEFT">
+
+        <VBox fx:id="vbpane" prefHeight="600" alignment="CENTER" VBox.vgrow="ALWAYS">
+            <GridPane fx:id="gpane" hgap="10" vgap="10" alignment="CENTER">
+                <Text fx:id="javlabel" text="JavChat"
+                      GridPane.columnIndex="0" GridPane.rowIndex="0"
+                      GridPane.columnSpan="2"/>
+
+                <Label text="User Name:"
+                       GridPane.columnIndex="0" GridPane.rowIndex="1"/>
+
+                <TextField
+                       fx:id="usernameField" GridPane.columnIndex="1" GridPane.rowIndex="1"/>
+
+                <Label text="Password:"
+                       GridPane.columnIndex="0" GridPane.rowIndex="2"/>
+
+                <PasswordField fx:id="passwordField"
+                               GridPane.columnIndex="1" GridPane.rowIndex="2" onAction="#tryAuth"/>
+
+                <Text fx:id="errmsg" visible="false" text="failed to identify your user account, please verify username and password specified"
+                      GridPane.columnIndex="0" GridPane.rowIndex="3"
+                      GridPane.columnSpan="2" wrappingWidth="320"/>
+
+            </GridPane>
+        </VBox>
+
+        <VBox>
+            <VBox prefHeight="600" prefWidth="300" alignment="BOTTOM_LEFT">
+                <ScrollPane fx:id="spane" fitToWidth="true" fitToHeight="true">
+                    <VBox fx:id="msg_container" alignment="BOTTOM_LEFT">
+                    </VBox>
+                </ScrollPane>
+            </VBox>
+
+            <HBox prefWidth="360">
+                <TextField fx:id="textField" minHeight="32" onAction="#sendMsg" promptText="Введите сообщение.." HBox.hgrow="ALWAYS" />
+                <Button fx:id="btn1" minHeight="32" minWidth="35" onAction="#sendMsg" text="" />
+            </HBox>
+        </VBox>
+    </StackPane>
+    <!--- style="-fx-border-width:2px;-fx-border-style: solid;" -->
+    <!--- <ListView></ListView> -->
+</HBox>

@@ -1,0 +1,58 @@
+#btn1 {
+    -fx-background-image: url("letter.png");
+    -fx-background-repeat: no-repeat;
+    -fx-background-position: 5 4;
+    -fx-background-size: 24 24;
+    -fx-width: 200px;
+}
+
+#textField {
+    -fx-padding: 5px;
+    -fx-margin: 5px;
+
+}
+
+
+.chat-bubble {
+    -fx-background-color: white;
+    -fx-background-radius: 10px;
+    -fx-border-radius: 10px;
+    -fx-border-width: 10px;
+    -fx-padding: 20px;
+    -fx-border-insets: 5px;
+    -fx-background-insets: 5px;
+    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.8), 10, 0, 0, 0);
+}
+
+#pane{
+    -fx-background-image: url("all_back.png");
+    -fx-background-repeat: stretch;
+    -fx-background-size: 1024 1024;
+    -fx-background-position: center center;
+    -fx-effect: dropshadow(three-pass-box, black, 30, 0.5, 0, 0);
+}
+
+#spane {
+    -fx-background-color : transparent;
+}
+
+#spane .viewport {
+    -fx-background-color: transparent;
+}
+
+#gpane {
+    -fx-background-color: white;
+    -fx-margin: 20px;
+    -fx-padding: 20px;
+}
+
+#javlabel {
+   -fx-font-size: 32px;
+   -fx-font-family: "Arial Black";
+   -fx-fill: #818181;
+   -fx-effect: innershadow( three-pass-box , rgba(0,0,0,0.7) , 6, 0.0 , 0 , 2 );
+}
+
+#errmsg {
+   -fx-fill: red;
+}

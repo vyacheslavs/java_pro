@@ -8,18 +8,21 @@ import static java.lang.Thread.sleep;
 
 public class Server {
 
-    public Auth auth = new Auth();
+    History history = new History();
+    Auth auth = new Auth();
     private Vector<ClientHandler> clients;
-    final int PORT = 10000;
-    final Long MAX_DELAY = 20000L;
 
     public Server() {
+        final int PORT = 10000;
+        final long MAX_DELAY = 20000L;
+
         ServerSocket server = null;
         Socket socket = null;
         clients = new Vector<>();
 
         try {
             auth.connect();
+            history.connect();
             server = new ServerSocket(PORT);
             System.out.println("Server started");
 
@@ -84,6 +87,10 @@ public class Server {
         clients.remove(client);
     }
 
+    public void archivate(int id, String msg) {
+        history.archivate(id, msg);
+    }
+
     public void broadcastMsg(String from_nick, String msg) {
         for (ClientHandler o: clients) {
             if (o.canReceiveMessagesFrom(from_nick))
@@ -123,6 +130,21 @@ public class Server {
         for (ClientHandler o: clients) {
             o.sendMsg(msg);
         }
+    }
+
+    public void loadHistory(final String nickname) {
+        history.iterateHistory(new HistoryWalking() {
+            @Override
+            public void messageUpdate(int db_id, String msg) {
+                for (ClientHandler cl : clients) {
+                    if (cl!=null && cl.credentials!=null && cl.credentials.db_id == db_id) {
+                        broadcastMsg(nickname, cl.credentials.nickname + ": " + msg);
+                        break;
+                    }
+                }
+            }
+        });
+
     }
 
     public void addBlock(int whosBlocking, String whomNick) {

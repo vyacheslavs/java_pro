@@ -23,38 +23,9 @@ import java.io.IOException;
 import java.net.Socket;
 import java.net.URL;
 import java.util.ResourceBundle;
-import java.util.concurrent.locks.Lock;
-import java.util.concurrent.locks.ReentrantLock;
+import Lesson_2.Guard;
+import Lesson_2.Victim;
 
-
-class Victim <VictimType> implements AutoCloseable {
-    VictimType body;
-    Lock lock;
-
-    @Override
-    public void close() throws Exception {
-        lock.unlock();
-    }
-
-    Victim(VictimType o, Lock _l) {
-        body = o;
-        lock = _l;
-    }
-}
-
-class Guard <VictimType> {
-    private final Lock lock = new ReentrantLock();
-    private VictimType victim;
-    Victim<VictimType> acquire() {
-        lock.lock();
-        return new Victim<VictimType>(victim, lock);
-    }
-
-    Guard() {}
-    Guard(VictimType v) {
-        victim = v;
-    }
-}
 
 class ChatMembers {
     public ListView<String> membersList;

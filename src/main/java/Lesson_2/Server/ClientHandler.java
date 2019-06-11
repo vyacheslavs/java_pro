@@ -30,6 +30,7 @@ public class ClientHandler {
             sendMsg("/authok "+credentials.nickname);
             server.broadcastMembers();
             blockList = server.auth.getBlocks(credentials.db_id);
+            server.loadHistory(credentials.nickname);
         } else {
             sendMsg("/authfail");
         }
@@ -130,6 +131,7 @@ public class ClientHandler {
 
 
                             if (credentials.isValid()) {
+                                server.archivate(credentials.db_id, str);
                                 server.broadcastMsg(credentials.nickname, credentials.nickname + ": " + str);
                                 updateActivity();
                             }

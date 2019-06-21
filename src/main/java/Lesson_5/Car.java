@@ -1,5 +1,8 @@
 package Lesson_5;
 
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.CyclicBarrier;
+
 public class Car implements Runnable {
     private static int CARS_COUNT;
     static {
@@ -8,13 +11,16 @@ public class Car implements Runnable {
     private Race race;
     private int speed;
     private String name;
+    private CountDownLatch barrier;
     public String getName() {
         return name;
     }
     public int getSpeed() {
         return speed;
     }
-    public Car(Race race, int speed) {
+
+    public Car(Race race, int speed, CountDownLatch cb) {
+        this.barrier = cb;
         this.race = race;
         this.speed = speed;
         CARS_COUNT++;
@@ -25,7 +31,10 @@ public class Car implements Runnable {
         try {
             System.out.println(this.name + " готовится");
             Thread.sleep(500 + (int)(Math.random() * 800));
+            barrier.countDown();
             System.out.println(this.name + " готов");
+
+            barrier.await();
         } catch (Exception e) {
             e.printStackTrace();
         }

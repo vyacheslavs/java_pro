@@ -1,15 +1,18 @@
 package Lesson_5;
 
 import java.util.concurrent.CountDownLatch;
-import java.util.concurrent.CyclicBarrier;
+import java.util.concurrent.locks.ReentrantLock;
 
 public class Car implements Runnable {
     private static int CARS_COUNT;
+    private static int WINNER_CAR = -1;
     static {
         CARS_COUNT = 0;
     }
     private Race race;
     private int speed;
+    private int carNo;
+    private static ReentrantLock lock = new ReentrantLock();
     private String name;
     private CountDownLatch barrier;
     public String getName() {
@@ -24,6 +27,7 @@ public class Car implements Runnable {
         this.race = race;
         this.speed = speed;
         CARS_COUNT++;
+        this.carNo = CARS_COUNT;
         this.name = "Участник #" + CARS_COUNT;
     }
     @Override
@@ -41,5 +45,12 @@ public class Car implements Runnable {
         for (int i = 0; i < race.getStages().size(); i++) {
             race.getStages().get(i).go(this);
         }
+
+        lock.lock();
+        if (WINNER_CAR == -1) {
+            WINNER_CAR = carNo;
+            System.out.println("ВАЖНОЕ ОБЪЯВЛЕНИЕ >>> Победитель: участник #"+carNo);
+        }
+        lock.unlock();
     }
 }

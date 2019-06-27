@@ -4,9 +4,14 @@ import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.Vector;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 import static java.lang.Thread.sleep;
 
 public class Server {
+
+    private static final Logger LOGGER = Logger.getLogger( Server.class.getName() );
 
     History history = new History();
     Auth auth = new Auth();
@@ -24,7 +29,7 @@ public class Server {
             auth.connect();
             history.connect();
             server = new ServerSocket(PORT);
-            System.out.println("Server started");
+            LOGGER.info("Server started");
 
             new Thread(new Runnable() {
                 @Override
@@ -34,8 +39,6 @@ public class Server {
                         try {
                             for (ClientHandler o : clients) {
                                 Long now = System.currentTimeMillis();
-                                if (o.lastActivity>0)
-                                    System.out.println(now-o.lastActivity);
                                 if (o.lastActivity>0 && now - o.lastActivity > MAX_DELAY) {
                                     o.sendMsg("session timeout, you've been kicked out... ");
                                     o.end_session();
@@ -48,7 +51,7 @@ public class Server {
                                 throw new RuntimeException(e);
                             }
                         } catch (Exception e) {
-                            e.printStackTrace();
+                            LOGGER.log(Level.WARNING, "error", e);
                         }
                     }
                 }
@@ -56,23 +59,23 @@ public class Server {
 
             while (true) {
                 socket = server.accept();
-                System.out.println("new client accepted");
+                LOGGER.info("new client accepted");
                 subscribe(new ClientHandler(socket, this));
             }
 
         } catch (IOException e) {
-            e.printStackTrace();
+            LOGGER.log(Level.SEVERE, "error", e);
         } finally {
             try {
                 socket.close();
             } catch (IOException e) {
-                e.printStackTrace();
+                LOGGER.log(Level.SEVERE, "error", e);
             }
 
             try {
                 server.close();
             } catch (IOException e) {
-                e.printStackTrace();
+                LOGGER.log(Level.SEVERE, "error", e);
             }
 
             auth.disconnect();

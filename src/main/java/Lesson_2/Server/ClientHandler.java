@@ -5,8 +5,12 @@ import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.Socket;
 import java.util.HashSet;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class ClientHandler {
+
+    private static final Logger LOGGER = Logger.getLogger( ClientHandler.class.getName() );
     private DataInputStream in;
     private DataOutputStream out;
     private Socket socket;
@@ -26,7 +30,7 @@ public class ClientHandler {
         if (_credentials.isValid() && !server.alreadyLoggedIn(_credentials.nickname)) {
             credentials = _credentials;
 
-            System.out.println("client successfully authentificated");
+            LOGGER.info("client successfully authentificated");
             sendMsg("/authok "+credentials.nickname);
             server.broadcastMembers();
             blockList = server.auth.getBlocks(credentials.db_id);
@@ -65,17 +69,17 @@ public class ClientHandler {
         try {
             in.close();
         } catch (IOException e) {
-            e.printStackTrace();
+            LOGGER.log(Level.WARNING, "error", e);
         }
         try {
             out.close();
         } catch (IOException e) {
-            e.printStackTrace();
+            LOGGER.log(Level.WARNING, "error", e);
         }
         try {
             socket.close();
         } catch (IOException e) {
-            e.printStackTrace();
+            LOGGER.log(Level.WARNING, "error", e);
         }
     }
 
@@ -93,8 +97,11 @@ public class ClientHandler {
                     try {
                         while (!sessionEnded) {
                             String str = in.readUTF();
+
+                            LOGGER.log(Level.FINE, "new client message/command: ", str);
+
                             if(str.equals("/end")) {
-                                System.out.println("client exits...");
+                                LOGGER.info("client exits...");
                                 break;
                             }
 
@@ -137,7 +144,7 @@ public class ClientHandler {
                             }
                         }
                     } catch (IOException e) {
-                        e.printStackTrace();
+                        LOGGER.log(Level.WARNING, "error", e);
                     } finally {
                         end_session();
                     }
@@ -145,7 +152,7 @@ public class ClientHandler {
             }).start();
 
         } catch (IOException e) {
-            e.printStackTrace();
+            LOGGER.log(Level.WARNING, "error", e);
         }
     }
 
@@ -153,7 +160,7 @@ public class ClientHandler {
         try {
             out.writeUTF(msg);
         } catch (IOException e) {
-            e.printStackTrace();
+            LOGGER.log(Level.WARNING, "error", e);
         }
     }
 }
